@@ -1,22 +1,46 @@
 import 'dart:convert';
 
-import 'package:dictionary_app/entities/word.dart';
-import 'package:http/http.dart' as http;
+import 'package:dictionary_app/data/words_remote_source.dart';
+import 'package:dictionary_app/services/shared_preferences_cached_data.dart';
+
+import '../entities/word.dart';
 
 class WordsRepository {
-  WordsRepository();
+  final WordsRemoteSource remoteSource;
+  final MySharedPreferences sharedPreferences;
 
-  Future<List<Word>> getWord(String word) async {
-    final url =
-        Uri.parse('https://api.dictionaryapi.dev/api/v2/entries/en/$word');
+  WordsRepository({
+    required this.remoteSource,
+    required this.sharedPreferences,
+  });
 
+  Future<dynamic> getWord(String word) async {
     try {
-      final response = await http.get(url);
-      List jsonResponse = json.decode(response.body);
+      final String? jsonData = await sharedPreferences.getDataIfNotExpired();
+      if (jsonData != null) {
+        final List<dynamic> jsonList = jsonDecode(jsonData);
+        final wordData = jsonList.firstWhere(
+            (element) => element['word'] == word,
+            orElse: () => null);
 
-      return jsonResponse.map((item) => Word.fromJson(item)).toList();
+        if (wordData != null) {
+          return Word.fromJson(wordData);
+        } else {
+          await remoteSource.fetchData(word);
+          return getWord(word);
+        }
+      } else {
+        await remoteSource.fetchData(word);
+        return getWord(word);
+      }
     } catch (e) {
-      throw Exception('Failed to load word, error $e');
+      throw Exception(e);
     }
+  }
+
+  // Function to refresh data from the API and update the cache
+  Future<dynamic> refreshData(String word) async {
+    await remoteSource.fetchData(word);
+    return getWord(word);
   }
 }

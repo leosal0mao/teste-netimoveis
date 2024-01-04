@@ -2,24 +2,24 @@ import 'dart:convert';
 
 class Definitions {
   String? definition;
-  String? example;
+  String? partOfSpeech;
 
   Definitions({
-    this.example,
     this.definition,
+    this.partOfSpeech,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'definition': definition,
-      'example': example,
+      'partOfSpeech': partOfSpeech,
     };
   }
 
   factory Definitions.fromMap(Map<String, dynamic> map) {
     return Definitions(
       definition: map['definition'] ?? '',
-      example: map['example'] ?? '',
+      partOfSpeech: map['partOfSpeech'] ?? '',
     );
   }
 

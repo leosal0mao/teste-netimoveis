@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:dictionary_app/entities/definitions.dart';
 
 class Meanings {
@@ -11,14 +10,18 @@ class Meanings {
   Map<String, dynamic> toMap() {
     return {
       'partOfSpeech': partOfSpeech,
-      'definitions': definitions?.map((x) => x.toMap()).toList,
+      'definitions': definitions?.map((x) => x.toMap()).toList(),
     };
   }
 
   factory Meanings.fromMap(Map<String, dynamic> map) {
     return Meanings(
       partOfSpeech: map['partOfSpeech'] ?? '',
-      definitions: map['definitions'] ?? '',
+      definitions: map['definitions'] != null
+          ? (map['definitions'] as List)
+              .map((x) => Definitions.fromMap(x))
+              .toList()
+          : [],
     );
   }
 

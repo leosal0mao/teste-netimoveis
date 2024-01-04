@@ -1,6 +1,8 @@
 import 'package:dictionary_app/repositories/words_repository.dart';
 import 'package:flutter/material.dart';
 
+import '../../widgets/custom_scaffold.dart';
+
 class HomePage extends StatelessWidget {
   HomePage({super.key, this.repository});
 
@@ -8,10 +10,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomScaffold(
       body: InkWell(
         onTap: () {
-          repository!.getWord('word');
+          repository!.getWord('patience');
         },
         child: Center(
           child: Text('HomePage'),

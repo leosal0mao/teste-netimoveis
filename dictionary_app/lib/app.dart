@@ -1,4 +1,3 @@
-import 'package:dictionary_app/pages/home/home_page.dart';
 import 'package:dictionary_app/routes.dart';
 import 'package:flutter/material.dart';
 
