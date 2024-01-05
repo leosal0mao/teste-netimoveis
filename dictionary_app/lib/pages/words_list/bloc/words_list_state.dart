@@ -15,11 +15,9 @@ class WordsListFailure extends WordsListState {
 class WordsListSuccess extends WordsListState {
   final List<Word> data;
   final bool? isLoading;
-  final bool? hasReachedMax;
 
   WordsListSuccess({
     required this.data,
     this.isLoading = false,
-    this.hasReachedMax,
   });
 }

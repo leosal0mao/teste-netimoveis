@@ -3,7 +3,7 @@ part of 'words_list_bloc.dart';
 abstract class WordsListEvent {}
 
 class LoadWordsEvent extends WordsListEvent {
-  final int pageNumber;
+  final List<Word> wordsList;
 
-  LoadWordsEvent({required this.pageNumber});
+  LoadWordsEvent({required this.wordsList});
 }

@@ -1,10 +1,9 @@
-import 'package:dictionary_app/pages/words_list/bloc/words_list_controller.dart';
 import 'package:dictionary_app/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../services/database_helper.dart';
 import 'bloc/words_list_bloc.dart';
+import 'widgets/word_list_tile.dart';
 
 class WordsListPage extends StatefulWidget {
   const WordsListPage({super.key});
@@ -14,18 +13,10 @@ class WordsListPage extends StatefulWidget {
 }
 
 class _WordsListPageState extends State<WordsListPage> {
-  late final WordsListController wordsListController;
-  late final WordsListBloc wordsListBloc;
-
-  Future<List<Map<String, dynamic>>> _getWords() async {
-    final db = await DatabaseHelper.instance.database;
-    return await db.query('words');
-  }
+  var wordsListBloc = getIt.get<WordsListBloc>();
 
   @override
   void initState() {
-    _getWords();
-
     super.initState();
   }
 
@@ -37,49 +28,54 @@ class _WordsListPageState extends State<WordsListPage> {
 
   @override
   Widget build(BuildContext context) {
-    // return BlocProvider(
-    //   create: (context) => wordsListBloc,
-    //   child: BlocBuilder<WordsListBloc, WordsListState>(
-    //     builder: (context, state) {
-    //       if (state is WordsListLoading) {
-    //         return const Center(child: CircularProgressIndicator());
-    //       } else if (state is WordsListSuccess) {
-    //         return ListView.builder(
-    //           itemCount: state.data.length,
-    //           itemBuilder: (context, index) {
-    //             final word = state.data[index];
-    //             return ListTile(
-    //               title: Text(word.word!),
-    //             );
-    //           },
-    //         );
-    //       } else if (state is WordsListFailure) {
-    //         return Center(child: Text(state.message!));
-    //       }
-    //       return Container();
-    //     },
-    //   ),
-    // );
-    return Container(
-      child: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _getWords(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(snapshot.data![index]['word']),
-                );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
+    List<Map<String, dynamic>> filteredWords = [];
 
-          // By default, show a loading spinner.
-          return CircularProgressIndicator();
-        },
+    return Padding(
+      padding: EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 10),
+      child: BlocProvider(
+        create: (context) => wordsListBloc,
+        child: Column(
+          children: [
+            TextField(
+              onChanged: (value) {
+                // filteredWords = snapshot.data!.where((word) {
+                //   return word['word']
+                //       .toLowerCase()
+                //       .contains(value.toLowerCase());
+                // }).toList();
+              },
+              decoration: InputDecoration(
+                labelText: 'Search word',
+                hintText: 'Enter a word',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+              ),
+            ),
+            BlocBuilder<WordsListBloc, WordsListState>(
+              builder: (context, state) {
+                if (state is WordsListLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is WordsListFailure) {
+                  return Center(child: Text(state.message!));
+                } else if (state is WordsListSuccess) {
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: state.data.length,
+                      itemBuilder: (context, index) {
+                        return WordListTile(
+                          title: state.data[index].word!,
+                          word: state.data[index],
+                        );
+                      },
+                    ),
+                  );
+                }
+                return const Center(child: CircularProgressIndicator());
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

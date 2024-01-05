@@ -9,7 +9,7 @@ import 'package:dictionary_app/repositories/words_repository.dart';
 final routes = {
   '/': (context) => HomePage(repository: getIt.get<WordsRepository>()),
   '/wordsList': (context) => const WordsListPage(),
-  '/wordPage': (context) => const WordPage(),
+  '/wordPage': (context) => WordPage(),
   '/wordHistory': (context) => const WordHistoryPage(),
   '/favouriteWords': (context) => const FavouriteWordsPage(),
 };
