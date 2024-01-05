@@ -1,4 +1,3 @@
-import 'package:dictionary_app/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 
 class FavouriteWordsPage extends StatelessWidget {
@@ -6,10 +5,8 @@ class FavouriteWordsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      body: Center(
-        child: Text('s'),
-      ),
+    return const Center(
+      child: Text('s'),
     );
   }
 }

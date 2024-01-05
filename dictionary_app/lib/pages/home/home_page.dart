@@ -13,9 +13,10 @@ class HomePage extends StatelessWidget {
     return CustomScaffold(
       body: InkWell(
         onTap: () {
-          repository!.getWord('patience');
+          // repository!.getWord('patience');
+          Navigator.pushNamed(context, '/wordsList');
         },
-        child: Center(
+        child: const Center(
           child: Text('HomePage'),
         ),
       ),

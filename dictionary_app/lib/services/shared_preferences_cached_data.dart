@@ -1,8 +1,19 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../providers.dart';
+
 class MySharedPreferences {
+  SharedPreferences? sharedPreferences;
   static const String _keyData = 'myData';
   static const String _keyExpiration = 'expirationTime';
+
+  MySharedPreferences({this.sharedPreferences});
+
+  Future<void> init() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+  }
 
   // Function to save data with an expiration date to SharedPreferences
   Future<bool> saveDataWithExpiration(
@@ -45,6 +56,40 @@ class MySharedPreferences {
       }
     } catch (e) {
       print('Error retrieving data from SharedPreferences: $e');
+      return null;
+    }
+  }
+
+  Future<void> saveWordsCache(
+      {String? key, dynamic object2, Duration? expiration}) async {
+    var now = DateTime.now();
+    var object2String = jsonEncode(object2);
+    var expirationString = now.add(expiration!).toIso8601String();
+
+    var mySharedPreferences = getIt<MySharedPreferences>();
+    await mySharedPreferences.sharedPreferences?.setString(key!, object2String);
+    await mySharedPreferences.sharedPreferences
+        ?.setString('$key-expiration', expirationString);
+  }
+
+  Future<dynamic> getWordsCache(String key) async {
+    var object2String = sharedPreferences?.getString(key);
+    var expirationString = sharedPreferences?.getString('$key-expiration');
+
+    if (object2String != null && expirationString != null) {
+      var now = DateTime.now();
+      var expirationDate = DateTime.parse(expirationString);
+
+      if (now.isBefore(expirationDate)) {
+        return jsonDecode(object2String);
+      } else {
+        // Data has expired. Remove it from SharedPreferences.
+        await sharedPreferences?.remove(key);
+        await sharedPreferences?.remove('$key-expiration');
+        print('Data has expired. Removed from SharedPreferences.');
+        return null;
+      }
+    } else {
       return null;
     }
   }
