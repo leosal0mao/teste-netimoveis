@@ -4,18 +4,18 @@ import 'package:dictionary_app/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/failure_widget.dart';
-import 'bloc/words_list_bloc.dart';
-import 'widgets/word_list_tile.dart';
+import '../words_list/widgets/word_list_tile.dart';
+import 'bloc/favorite_words_bloc.dart';
 
-class WordsListPage extends StatefulWidget {
-  const WordsListPage({super.key});
+class FavoriteWordsPage extends StatefulWidget {
+  const FavoriteWordsPage({super.key});
 
   @override
-  State<WordsListPage> createState() => _WordsListPageState();
+  State<FavoriteWordsPage> createState() => _FavoriteWordsPageState();
 }
 
-class _WordsListPageState extends State<WordsListPage> {
-  var wordsListBloc = getIt.get<WordsListBloc>();
+class _FavoriteWordsPageState extends State<FavoriteWordsPage> {
+  var favoriteWordsBloc = getIt.get<FavoriteWordsBloc>();
   var wordBloc = getIt.get<WordBloc>();
   List<Word> wordList = [];
 
@@ -26,7 +26,7 @@ class _WordsListPageState extends State<WordsListPage> {
 
   @override
   void dispose() {
-    wordsListBloc.close(); //dispose unused bloc to prevent memory leaks
+    favoriteWordsBloc.close(); //dispose unused bloc to prevent memory leaks
     super.dispose();
   }
 
@@ -37,7 +37,7 @@ class _WordsListPageState extends State<WordsListPage> {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 10),
       child: BlocProvider(
-        create: (context) => wordsListBloc,
+        create: (context) => favoriteWordsBloc,
         child: Column(
           children: [
             TextField(
@@ -57,22 +57,22 @@ class _WordsListPageState extends State<WordsListPage> {
               ),
             ),
             Expanded(
-              child: BlocBuilder<WordsListBloc, WordsListState>(
+              child: BlocBuilder<FavoriteWordsBloc, FavoriteWordsState>(
                 builder: (context, state) {
-                  if (state is WordsListInitial) {
-                    BlocProvider.of<WordsListBloc>(context)
-                        .add(LoadWordsEvent(data: []));
+                  if (state is FavoriteWordsInitial) {
+                    BlocProvider.of<FavoriteWordsBloc>(context)
+                        .add(LoadFavoriteWordsEvent(data: []));
                     return const Center(child: CircularProgressIndicator());
                   }
-                  if (state is WordsListLoading) {
+                  if (state is FavoriteWordsLoading) {
                     return const Center(child: CircularProgressIndicator());
                   }
-                  if (state is WordsListFailure) {
+                  if (state is FavoriteWordsFailure) {
                     return FailureWidget(
                       error: state.message,
                     );
                   }
-                  if (state is WordsListSuccess) {
+                  if (state is FavoriteWordsSuccess) {
                     return BlocProvider.value(
                       value: wordBloc,
                       child: ListView.builder(

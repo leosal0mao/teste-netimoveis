@@ -9,15 +9,22 @@ class WordLoadingState extends WordState {}
 class WordFailureState extends WordState {
   final String message;
 
-  WordFailureState(this.message);
+  WordFailureState({required this.message});
 }
 
-class WordSucessState extends WordState {
-  final Word response;
+class WordNotFoundState extends WordState {
+  final WordNotFound word;
+  final String message;
+
+  WordNotFoundState({required this.word, required this.message});
+}
+
+class WordSuccessState extends WordState {
+  final Word data;
   final bool? isLoading;
 
-  WordSucessState({
-    required this.response,
+  WordSuccessState({
+    required this.data,
     this.isLoading = false,
   });
 }

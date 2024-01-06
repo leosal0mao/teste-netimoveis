@@ -1,4 +1,4 @@
-import 'package:dictionary_app/pages/favourite_words/favourite_words_page.dart';
+import 'package:dictionary_app/pages/favorite_words/favorite_words_page.dart';
 import 'package:dictionary_app/pages/word_history/word_history_page.dart';
 import 'package:dictionary_app/pages/words_list/words_list_page.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
   final List<Widget> _children = <Widget>[
     WordsListPage(key: UniqueKey()),
     WordHistoryPage(key: UniqueKey()),
-    FavouriteWordsPage(key: UniqueKey()),
+    FavoriteWordsPage(key: UniqueKey()),
   ];
 
   @override

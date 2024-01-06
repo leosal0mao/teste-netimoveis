@@ -1,23 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 
-// Future<List<String>> loadJsonAsset(
-//     {String? path, int? pageNumber, int? itemsPerPage}) async {
-//   var jsonString = await rootBundle.loadString(path!);
-
-//   Map<String, dynamic> jsonList = jsonDecode(jsonString);
-//   List<String> keys = jsonList.keys.toList();
-
-//   return paginate(keys, pageNumber!, itemsPerPage!);
-// }
-
-// List<String> paginate(List<String> list, int pageNumber, int itemsPerPage) {
-//   int start = (pageNumber - 1) * itemsPerPage;
-//   int end =
-//       (start + itemsPerPage > list.length) ? list.length : start + itemsPerPage;
-//   return list.sublist(start, end);
-// }
-
 Stream<String> readJsonLines(String path) async* {
   final byteStream = await rootBundle.loadString(path);
   final utf8Decoder = utf8.decoder;

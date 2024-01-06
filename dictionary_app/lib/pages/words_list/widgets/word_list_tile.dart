@@ -4,23 +4,21 @@ import '../../../entities/word.dart';
 
 class WordListTile extends StatelessWidget {
   String title;
-  Word word;
+  String word;
+  Function() onTap;
 
   WordListTile({
     super.key,
     required this.title,
     required this.word,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () => Navigator.pushNamed(
-        context,
-        '/wordPage',
-        arguments: word,
-      ),
-      title: Text(title),
+      onTap: onTap,
+      title: Center(child: Text(title)),
     );
   }
 }

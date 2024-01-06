@@ -3,7 +3,7 @@ part of 'word_bloc.dart';
 abstract class WordEvent {}
 
 class FetchWordEvent extends WordEvent {
-  Word word;
+  String word;
 
   FetchWordEvent({required this.word});
 }

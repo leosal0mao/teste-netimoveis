@@ -13,7 +13,7 @@ class WordsListFailure extends WordsListState {
 }
 
 class WordsListSuccess extends WordsListState {
-  final List<Word> data;
+  final List<Map<String, dynamic>> data;
   final bool? isLoading;
 
   WordsListSuccess({
