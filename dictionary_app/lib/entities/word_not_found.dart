@@ -25,4 +25,12 @@ class WordNotFound {
     data['resolution'] = resolution;
     return data;
   }
+
+  factory WordNotFound.fromMap(Map<String, dynamic> map) {
+    return WordNotFound(
+      title: map['title'] ?? '',
+      message: map['message'] ?? '',
+      resolution: map['resolution'] ?? '',
+    );
+  }
 }

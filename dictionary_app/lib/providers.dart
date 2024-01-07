@@ -4,26 +4,26 @@ import 'package:dictionary_app/pages/word/bloc/word_bloc.dart';
 import 'package:dictionary_app/pages/words_list/bloc/words_list_bloc.dart';
 import 'package:dictionary_app/repositories/favorite_words_repository.dart';
 import 'package:dictionary_app/repositories/words_repository.dart';
-import 'package:dictionary_app/services/shared_preferences_cached_data.dart';
+import 'package:dictionary_app/services/my_local_storage.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
 
 void setupProviders() {
-  getIt.registerSingleton(MySharedPreferences());
+  getIt.registerSingleton(MyLocalStorage());
 
   //registered as factory because I need just 1 instance per API call
   getIt.registerFactory<WordsRepository>(
     () => WordsRepository(
-      remoteSource: WordsRemoteSource(getIt.get<MySharedPreferences>()),
-      sharedPreferences: getIt.get<MySharedPreferences>(),
+      remoteSource: WordsRemoteSource(getIt.get<MyLocalStorage>()),
+      localStorage: getIt.get<MyLocalStorage>(),
     ),
   );
 
   getIt.registerLazySingleton(() => FavoriteWordsRepository());
 
   getIt.registerLazySingleton<WordsRemoteSource>(
-    () => WordsRemoteSource(getIt.get<MySharedPreferences>()),
+    () => WordsRemoteSource(getIt.get<MyLocalStorage>()),
   );
 
   getIt.registerLazySingleton<WordsListBloc>(

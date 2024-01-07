@@ -26,12 +26,16 @@ class WordBloc extends Bloc<WordEvent, WordState> {
       emit(WordLoadingState());
       final fetchedWord = await wordsRepository.getWord(event.word);
 
-      (fetchedWord is WordNotFound)
-          ? emit(WordNotFoundState(
-              word: fetchedWord,
-              message:
-                  'This word does not exist on the dictionary, do a new search'))
-          : emit(WordSuccessState(data: fetchedWord));
+      if (fetchedWord.containsKey('word')) {
+        final word = Word.fromMap(fetchedWord);
+        emit(WordSuccessState(data: word));
+      } else {
+        final word = WordNotFound.fromMap(fetchedWord);
+        emit(WordNotFoundState(
+            message:
+                'This word does not exist on the dictionary, do a new search',
+            word: word));
+      }
     } catch (e) {
       emit(WordFailureState(message: e.toString()));
     }

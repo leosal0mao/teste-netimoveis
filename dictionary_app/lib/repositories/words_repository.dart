@@ -2,44 +2,38 @@ import 'dart:convert';
 
 import 'package:dictionary_app/data/words_remote_source.dart';
 import 'package:dictionary_app/entities/word_not_found.dart';
-import 'package:dictionary_app/services/shared_preferences_cached_data.dart';
-import 'package:http/http.dart';
+import 'package:dictionary_app/services/my_local_storage.dart';
 
-import '../entities/word.dart';
 import '../services/database_helper.dart';
 
 class WordsRepository {
   final WordsRemoteSource remoteSource;
-  final MySharedPreferences sharedPreferences;
+  final MyLocalStorage localStorage;
 
   WordsRepository({
     required this.remoteSource,
-    required this.sharedPreferences,
+    required this.localStorage,
   });
 
   Future<dynamic> getWord(String word) async {
     try {
-      final Response jsonData = await remoteSource.fetchData(word);
-      final dynamic jsonList = jsonDecode(jsonData.body);
+      final String jsonData = await remoteSource.fetchData(word);
+      final dynamic jsonList = jsonDecode(jsonData);
 
-      if (jsonData.statusCode == 404) {
-        return WordNotFound.fromJson(jsonData.body);
+      if (jsonList is Map<String, dynamic>) {
+        return jsonList;
       } else {
-        final wordData = jsonList.firstWhere(
-            (element) => element['word'] == word,
-            orElse: () => null);
+        Map<String, dynamic> wordValidData = jsonList.firstWhere(
+          (element) => element['word'] == word,
+          orElse: () => {},
+        );
 
-        return Word.fromJson(wordData);
+        return wordValidData;
       }
     } catch (e) {
+      print(e);
       throw Exception('Error in method getWord $e');
     }
-  }
-
-  // Function to refresh data from the API and update the cache
-  Future<dynamic> refreshData(String word) async {
-    await remoteSource.fetchData(word);
-    return getWord(word);
   }
 
   Future<List<Map<String, dynamic>>> loadWordsFromDatabase() async {

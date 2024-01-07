@@ -1,18 +1,25 @@
-import 'package:dictionary_app/services/shared_preferences_cached_data.dart';
+import 'package:dictionary_app/services/my_local_storage.dart';
 import 'package:http/http.dart' as http;
 
 class WordsRemoteSource {
-  final MySharedPreferences? mySharedPreferences;
+  final MyLocalStorage? localStorage;
 
-  WordsRemoteSource(this.mySharedPreferences);
+  WordsRemoteSource(this.localStorage);
 
-  Future<dynamic> fetchData(String word) async {
+  Future<String> fetchData(String word) async {
     try {
-      final url =
-          Uri.parse('https://api.dictionaryapi.dev/api/v2/entries/en/$word');
-      final response = await http.get(url);
+      String? savedData = await localStorage?.getData(word);
 
-      return response;
+      if (savedData != null) {
+        return savedData;
+      } else {
+        final url =
+            Uri.parse('https://api.dictionaryapi.dev/api/v2/entries/en/$word');
+        final response = await http.get(url);
+
+        await localStorage?.saveData(word, response.body);
+        return response.body;
+      }
     } catch (e) {
       throw Exception(e);
     }
