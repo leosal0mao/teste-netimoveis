@@ -1,10 +1,9 @@
 import 'package:dictionary_app/entities/word.dart';
-import 'package:dictionary_app/pages/word/bloc/word_bloc.dart';
+import 'package:dictionary_app/pages/words_list/widgets/word_list_tile.dart';
 import 'package:dictionary_app/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/failure_widget.dart';
-import '../words_list/widgets/word_list_tile.dart';
 import 'bloc/favorite_words_bloc.dart';
 
 class FavoriteWordsPage extends StatefulWidget {
@@ -15,8 +14,7 @@ class FavoriteWordsPage extends StatefulWidget {
 }
 
 class _FavoriteWordsPageState extends State<FavoriteWordsPage> {
-  var favoriteWordsBloc = getIt.get<FavoriteWordsBloc>();
-  var wordBloc = getIt.get<WordBloc>();
+  var favoritewordsBloc = getIt.get<FavoriteWordsBloc>();
   List<Word> wordList = [];
 
   @override
@@ -26,7 +24,7 @@ class _FavoriteWordsPageState extends State<FavoriteWordsPage> {
 
   @override
   void dispose() {
-    favoriteWordsBloc.close(); //dispose unused bloc to prevent memory leaks
+    favoritewordsBloc.close(); //dispose unused bloc to prevent memory leaks
     super.dispose();
   }
 
@@ -37,7 +35,7 @@ class _FavoriteWordsPageState extends State<FavoriteWordsPage> {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 10),
       child: BlocProvider(
-        create: (context) => favoriteWordsBloc,
+        create: (context) => favoritewordsBloc,
         child: Column(
           children: [
             TextField(
@@ -72,27 +70,25 @@ class _FavoriteWordsPageState extends State<FavoriteWordsPage> {
                       error: state.message,
                     );
                   }
+
                   if (state is FavoriteWordsSuccess) {
-                    return BlocProvider.value(
-                      value: wordBloc,
-                      child: ListView.builder(
-                        itemCount: state.data.length,
-                        itemBuilder: (context, index) {
-                          final word =
-                              state.data[index].values.elementAt(1).toString();
-                          return WordListTile(
-                            title: word,
-                            word: word,
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/wordPage',
-                                arguments: word,
-                              );
-                            },
-                          );
-                        },
-                      ),
+                    return ListView.builder(
+                      itemCount: state.data.length,
+                      itemBuilder: (context, index) {
+                        final word =
+                            state.data[index].values.elementAt(1).toString();
+                        return WordListTile(
+                          title: word,
+                          word: word,
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/wordPage',
+                              arguments: word,
+                            );
+                          },
+                        );
+                      },
                     );
                   }
                   return const Center(child: CircularProgressIndicator());

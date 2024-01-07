@@ -1,6 +1,7 @@
 import 'package:dictionary_app/entities/word.dart';
 import 'package:dictionary_app/pages/word/bloc/word_bloc.dart';
 import 'package:dictionary_app/providers.dart';
+import 'package:dictionary_app/repositories/words_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/failure_widget.dart';
@@ -73,26 +74,23 @@ class _WordsListPageState extends State<WordsListPage> {
                     );
                   }
                   if (state is WordsListSuccess) {
-                    return BlocProvider.value(
-                      value: wordBloc,
-                      child: ListView.builder(
-                        itemCount: state.data.length,
-                        itemBuilder: (context, index) {
-                          final word =
-                              state.data[index].values.elementAt(1).toString();
-                          return WordListTile(
-                            title: word,
-                            word: word,
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/wordPage',
-                                arguments: word,
-                              );
-                            },
-                          );
-                        },
-                      ),
+                    return ListView.builder(
+                      itemCount: state.data.length,
+                      itemBuilder: (context, index) {
+                        final word =
+                            state.data[index].values.elementAt(1).toString();
+                        return WordListTile(
+                          title: word,
+                          word: word,
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/wordPage',
+                              arguments: word,
+                            );
+                          },
+                        );
+                      },
                     );
                   }
                   return const Center(child: CircularProgressIndicator());

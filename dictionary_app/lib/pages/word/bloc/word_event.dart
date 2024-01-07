@@ -14,3 +14,5 @@ class SaveToFavoriteEvent extends WordEvent {
 
   SaveToFavoriteEvent({required this.word, required this.isFavorite});
 }
+
+class WordEmptyEvent extends WordEvent {}

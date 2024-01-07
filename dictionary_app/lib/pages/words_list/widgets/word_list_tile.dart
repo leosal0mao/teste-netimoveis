@@ -1,3 +1,4 @@
+import 'package:dictionary_app/pages/word/bloc/word_bloc.dart';
 import 'package:flutter/material.dart';
 
 import '../../../entities/word.dart';

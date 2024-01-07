@@ -10,6 +10,7 @@ class DatabaseHelper {
   static const table = "words";
   static const columnId = "id";
   static const columnData = "word";
+  static const isFavorite = "isFavorite";
 
   DatabaseHelper._privateConstructor();
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
@@ -31,7 +32,7 @@ class DatabaseHelper {
 
   Future _onCreate(Database db, int version) async {
     await db.execute(
-      'CREATE TABLE $table($columnId INTEGER PRIMARY KEY, $columnData TEXT)',
+      'CREATE TABLE $table($columnId INTEGER PRIMARY KEY, $columnData TEXT, $isFavorite INTEGER DEFAULT 0 NOT NULL)',
     );
     await _insertLines(db);
   }
@@ -41,8 +42,9 @@ class DatabaseHelper {
         await rootBundle.loadString('assets/words_dictionary.json');
     Map<String, dynamic> map = json.decode(jsonString);
     List<Map<String, dynamic>> listOfMaps =
-        map.entries.map((e) => {'word': e.key}).toList();
+        map.entries.map((e) => {'word': e.key, 'isFavorite': e.value}).toList();
     for (var item in listOfMaps) {
+      item[isFavorite] = 0;
       await db.insert(table, item);
     }
   }

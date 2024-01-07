@@ -36,12 +36,12 @@ class MeaningsContainer extends StatelessWidget {
             Text('Meaning:', style: TextStyle(fontSize: 35)),
             const SizedBox(height: 10),
             Text(
-              'Meaning: $meaning',
+              'Meaning: ${meaning ?? 'Not available'} ',
               style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 20),
             Text(
-              'Definition: $definition',
+              'Definition: ${definition ?? 'Not available'}',
               style: TextStyle(fontSize: 18),
             ),
           ],

@@ -1,56 +1,59 @@
-import 'package:sqflite/sqflite.dart';
-
-import '../entities/word.dart';
-import 'package:path/path.dart';
+import 'dart:async';
+import '../services/database_helper.dart';
 
 class FavoriteWordsRepository {
-  Future<Database> get database async {
-    return await openDatabase(
-      join(await getDatabasesPath(), 'favoriteWords.db'),
-      onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE favoriteWords(id TEXT PRIMARY KEY, value TEXT)', // SQL command to create a table
-        );
-      },
-      version: 1,
-    );
-  }
-
-  Future<bool> isWordOnFavorites(String word) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'favoriteWords',
-      where: 'value = ?',
-      whereArgs: [word],
-    );
-    return maps.isNotEmpty;
-  }
-
-  Future<Word> addWordToFavorites(Word word) async {
-    final db = await database;
-    if (await isWordOnFavorites(word.word!)) {
-      throw ArgumentError('Word is already on favorites.');
-    }
-    await db.insert(
-      'favoriteWords',
-      word.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-    return word;
-  }
-
   Future<List<Map<String, dynamic>>> getFavoriteWords() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('favoriteWords');
-    return List.generate(maps.length, (i) => maps[i]);
+    try {
+      final db = await DatabaseHelper.instance.database;
+      final List<Map<String, dynamic>> maps =
+          await db.query('words', where: 'isFavorite = ?', whereArgs: ['1']);
+      if (maps.isEmpty) {
+        return [];
+      } else {
+        return List.generate(maps.length, (i) => maps[i]);
+      }
+    } catch (e) {
+      throw ('Error occurred while getting favorite words: $e');
+    }
   }
 
-  Future<void> deleteWordFromFavorites(Word word) async {
-    final db = await database;
-    await db.delete(
-      'favoriteWords',
-      where: 'value = ?',
-      whereArgs: [word.word!],
-    );
+  Future<void> addWordToFavorites(String word) async {
+    try {
+      final db = await DatabaseHelper.instance.database;
+
+      await db.update(
+        'words',
+        {'isFavorite': 1},
+        where: 'word = ?',
+        whereArgs: [word],
+      );
+    } catch (e) {
+      throw ('Error occurred while adding word to favorites: $e');
+    }
+  }
+
+  Future<void> deleteWordFromFavorites(String word) async {
+    try {
+      final db = await DatabaseHelper.instance.database;
+      await db.update(
+        'words',
+        {'isFavorite': 0},
+        where: 'word = ?',
+        whereArgs: [word],
+      );
+    } catch (e) {
+      throw ('Error occurred while deleting word from favorites: $e');
+    }
+  }
+
+  Future<bool> isFavorite(String word) async {
+    try {
+      final db = await DatabaseHelper.instance.database;
+      final List<Map<String, dynamic>> maps =
+          await db.query('words', where: 'word = ?', whereArgs: [word]);
+      return maps.isNotEmpty;
+    } catch (e) {
+      throw ('Error occurred while checking if the word is a favorite: $e');
+    }
   }
 }

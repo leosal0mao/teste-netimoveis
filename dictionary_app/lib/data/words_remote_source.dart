@@ -1,4 +1,3 @@
-import 'package:dictionary_app/entities/word_not_found.dart';
 import 'package:dictionary_app/services/shared_preferences_cached_data.dart';
 import 'package:http/http.dart' as http;
 

@@ -45,6 +45,7 @@ class WordsRepository {
   Future<List<Map<String, dynamic>>> loadWordsFromDatabase() async {
     try {
       final db = await DatabaseHelper.instance.database;
+
       List<Map<String, dynamic>> wordsList = await db.query('words');
 
       return wordsList;

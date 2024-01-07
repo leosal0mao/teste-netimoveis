@@ -1,5 +1,6 @@
-import 'dart:ffi';
+import 'dart:async';
 
+import 'package:dictionary_app/pages/favorite_words/bloc/favorite_words_bloc.dart';
 import 'package:dictionary_app/pages/word/widgets/meanings_container.dart';
 import 'package:dictionary_app/pages/word/widgets/play_audio_button.dart';
 import 'package:dictionary_app/pages/word/widgets/word_container.dart';
@@ -12,7 +13,9 @@ import 'bloc/word_bloc.dart';
 
 class WordPage extends StatefulWidget {
   final String word;
-  WordPage({super.key, required this.word});
+  bool isFavorite;
+
+  WordPage({super.key, required this.word, required this.isFavorite});
 
   @override
   State<WordPage> createState() => _WordPageState();
@@ -20,25 +23,92 @@ class WordPage extends StatefulWidget {
 
 class _WordPageState extends State<WordPage> {
   var wordBloc = getIt.get<WordBloc>();
+  var favoriteBloc = getIt.get<FavoriteWordsBloc>();
 
   @override
   void initState() {
+    wordBloc.add(FetchWordEvent(word: widget.word));
+
     super.initState();
   }
 
   @override
   void dispose() {
+    wordBloc.close();
+    favoriteBloc.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    wordBloc.add(FetchWordEvent(word: widget.word));
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: Text('${widget.word} Details'),
+          actions: [
+            BlocProvider(
+                create: (context) => favoriteBloc,
+                child: BlocConsumer<FavoriteWordsBloc, FavoriteWordsState>(
+                    listener: (context, state) {
+                  if (state is FavoriteWordsFailure) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content:
+                              Text('Word already exists on your favourites')),
+                    );
+                  }
+                  if (state is FavoriteWordSavedSuccess) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Word added to favorites')),
+                    );
+                    setState(() {
+                      widget.isFavorite = true;
+                    });
+                  }
+                  if (state is FavoriteWordDeletedSuccess) {
+                    if (state is FavoriteWordSavedSuccess) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Word deleted from favorites')),
+                      );
+                      setState(() {
+                        widget.isFavorite = false;
+                      });
+                    }
+                  }
+                  if (state is FavoriteWordsLoading) {
+                    favoriteBloc
+                        .add(IsFavoriteEvent(isFavorite: widget.isFavorite));
+                  }
+                  if (state is IsFavoriteSuccess) {
+                    setState(() {
+                      widget.isFavorite = true;
+                    });
+                  }
+                }, builder: (context, state) {
+                  return IconButton(
+                    icon: Icon(
+                      state is IsFavoriteState ? Icons.star : Icons.star_border,
+                      color: Colors.amber,
+                    ),
+                    onPressed: () {
+                      state is IsFavoriteState?
+                          ? favoriteBloc
+                              .add(DeleteFromFavoritesEvent(word: widget.word))
+                          : favoriteBloc
+                              .add(AddToFavoritesEvent(word: widget.word));
+                    },
+                  );
+                })),
+          ],
+        ),
         body: BlocProvider(
-          create: (context) => context.read<WordBloc>(),
-          child: BlocBuilder<WordBloc, WordState>(
+          create: (context) => wordBloc,
+          child: BlocConsumer<WordBloc, WordState>(
+            listener: (context, state) {
+              if (state is WordInitialState) {
+                wordBloc.add(FetchWordEvent(word: widget.word));
+              }
+            },
             builder: (context, state) {
               if (state is WordInitialState) {
                 return const Center(child: CircularProgressIndicator());
@@ -91,7 +161,13 @@ class _WordPageState extends State<WordPage> {
                   ),
                 );
               }
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                  child: Column(
+                children: [
+                  Text('Page did not enter on any bloc'),
+                  CircularProgressIndicator(),
+                ],
+              ));
             },
           ),
         ));

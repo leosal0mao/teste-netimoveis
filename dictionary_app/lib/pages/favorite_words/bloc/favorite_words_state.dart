@@ -19,3 +19,24 @@ class FavoriteWordsSuccess extends FavoriteWordsState {
     required this.data,
   });
 }
+
+class FavoriteWordSavedSuccess extends FavoriteWordsState {
+  final String word;
+  FavoriteWordSavedSuccess({required this.word});
+}
+
+class FavoriteWordDeletedSuccess extends FavoriteWordsState {
+  final String word;
+  FavoriteWordDeletedSuccess({required this.word});
+}
+
+class IsFavoriteSuccess extends FavoriteWordsState {
+  bool isFavorite;
+  IsFavoriteSuccess({required this.isFavorite});
+}
+
+class IsFavoriteState extends FavoriteWordsState {
+  bool isFavorite;
+
+  IsFavoriteState({required this.isFavorite});
+}

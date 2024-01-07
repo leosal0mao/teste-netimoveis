@@ -1,5 +1,6 @@
 import 'package:dictionary_app/entities/word.dart';
 import 'package:dictionary_app/entities/word_not_found.dart';
+import 'package:dictionary_app/repositories/favorite_words_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../repositories/words_repository.dart';
@@ -9,11 +10,12 @@ part 'word_event.dart';
 
 class WordBloc extends Bloc<WordEvent, WordState> {
   final WordsRepository wordsRepository;
-  Set<Word> favoriteWords = {};
+  final FavoriteWordsRepository favoriteWordsRepository;
 
-  WordBloc({required this.wordsRepository}) : super(WordInitialState()) {
+  WordBloc(
+      {required this.wordsRepository, required this.favoriteWordsRepository})
+      : super(WordInitialState()) {
     on<FetchWordEvent>(_onFetchWord);
-    on<SaveToFavoriteEvent>(_saveWordToFavorite);
   }
 
   Future<void> _onFetchWord(
@@ -32,23 +34,6 @@ class WordBloc extends Bloc<WordEvent, WordState> {
           : emit(WordSuccessState(data: fetchedWord));
     } catch (e) {
       emit(WordFailureState(message: e.toString()));
-    }
-  }
-
-  void _toggleFavoriteWord(Word word) {
-    favoriteWords.contains(word)
-        ? favoriteWords.remove(word)
-        : favoriteWords.add(word);
-  }
-
-  Future<void> _saveWordToFavorite(
-    SaveToFavoriteEvent event,
-    Emitter<WordState> emit,
-  ) async {
-    final currentState = state;
-    if (currentState is WordSuccessState) {
-      _toggleFavoriteWord(currentState.data);
-      emit(WordSuccessState(data: currentState.data));
     }
   }
 }

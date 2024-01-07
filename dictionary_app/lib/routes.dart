@@ -12,10 +12,11 @@ final routes = {
   '/wordsList': (context) => const WordsListPage(),
   '/wordPage': (context) {
     final word = ModalRoute.of(context)?.settings.arguments as String;
-    if (word == null) {
-      throw Exception('Word argument not provided');
-    }
-    return WordPage(word: word);
+
+    return WordPage(
+      word: word,
+      isFavorite: false,
+    );
   },
   '/wordHistory': (context) => const WordHistoryPage(),
   '/favouriteWords': (context) => const FavoriteWordsPage(),
