@@ -47,13 +47,6 @@ class _WordPageState extends State<WordPage> {
                 create: (context) => favoriteBloc,
                 child: BlocConsumer<FavoriteWordsBloc, FavoriteWordsState>(
                     listener: (context, state) {
-                  if (state is FavoriteWordsFailure) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content:
-                              Text('Word already exists on your favourites')),
-                    );
-                  }
                   if (state is FavoriteWordSavedSuccess) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Word added to favorites')),
@@ -73,15 +66,6 @@ class _WordPageState extends State<WordPage> {
                       });
                     }
                   }
-                  if (state is FavoriteWordsLoading) {
-                    favoriteBloc
-                        .add(IsFavoriteEvent(isFavorite: widget.isFavorite));
-                  }
-                  if (state is IsFavoriteSuccess) {
-                    setState(() {
-                      widget.isFavorite = true;
-                    });
-                  }
                 }, builder: (context, state) {
                   return IconButton(
                     icon: Icon(
@@ -89,11 +73,7 @@ class _WordPageState extends State<WordPage> {
                       color: Colors.amber,
                     ),
                     onPressed: () {
-                      state is IsFavoriteState?
-                          ? favoriteBloc
-                              .add(DeleteFromFavoritesEvent(word: widget.word))
-                          : favoriteBloc
-                              .add(AddToFavoritesEvent(word: widget.word));
+                      favoriteBloc.add(AddToFavoritesEvent(word: widget.word));
                     },
                   );
                 })),

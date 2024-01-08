@@ -48,8 +48,8 @@ class FavoriteWordsBloc extends Bloc<FavoriteWordsEvent, FavoriteWordsState> {
 
       emit(FavoriteWordSavedSuccess(word: event.word));
     } else {
-      emit(FavoriteWordsFailure(
-          message: 'word already exists on your favorites'));
+      await favoriteWordsRepository.deleteWordFromFavorites(event.word);
+      emit(FavoriteWordDeletedSuccess(word: event.word));
     }
   }
 
