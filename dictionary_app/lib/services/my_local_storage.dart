@@ -12,6 +12,9 @@ class MyLocalStorage {
 
     if (word == null) {
       await prefs.setString(key, value);
+    } else {
+      await prefs.remove(key);
+      await prefs.setString(key, value);
     }
   }
 
@@ -26,15 +29,11 @@ class MyLocalStorage {
 
     for (var key in keys) {
       String? value = await getData(key);
-      if (value != null) {
-        try {
-          List<dynamic> valuesList = jsonDecode(value);
-          for (var wordMap in valuesList) {
-            wordMap['key'] = key;
-            savedWord.add(wordMap);
-          }
-        } catch (e) {
-          throw Exception(e);
+      if (!value!.contains('title')) {
+        List<dynamic> valuesList = jsonDecode(value);
+        for (var wordMap in valuesList) {
+          wordMap['key'] = key;
+          savedWord.add(wordMap);
         }
       }
     }
