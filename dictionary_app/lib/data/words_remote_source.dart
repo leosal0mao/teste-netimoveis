@@ -17,7 +17,7 @@ class WordsRemoteSource {
             Uri.parse('https://api.dictionaryapi.dev/api/v2/entries/en/$word');
         final response = await http.get(url);
 
-        await localStorage?.saveData(word, response.body);
+        localStorage?.saveData(word, response.body);
         return response.body;
       }
     } catch (e) {

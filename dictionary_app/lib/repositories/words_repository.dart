@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dictionary_app/data/words_remote_source.dart';
-import 'package:dictionary_app/entities/word_not_found.dart';
 import 'package:dictionary_app/services/my_local_storage.dart';
 
 import '../services/database_helper.dart';

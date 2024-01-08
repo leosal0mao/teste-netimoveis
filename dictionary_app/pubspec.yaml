@@ -16,6 +16,7 @@ dependencies:
   sqflite: ^2.3.0
   flutter_tts: ^3.8.5
   localstorage: ^4.0.1+4
+  shared_preferences: ^2.2.2
   
 
 dev_dependencies:
