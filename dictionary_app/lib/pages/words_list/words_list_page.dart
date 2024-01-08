@@ -1,7 +1,6 @@
 import 'package:dictionary_app/entities/word.dart';
 import 'package:dictionary_app/pages/word/bloc/word_bloc.dart';
 import 'package:dictionary_app/providers.dart';
-import 'package:dictionary_app/repositories/words_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/failure_widget.dart';

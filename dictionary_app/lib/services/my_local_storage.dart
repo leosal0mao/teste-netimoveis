@@ -17,7 +17,6 @@ class MyLocalStorage {
 
   Future<String?> getData(String key) async {
     final String? item = prefs.getString(key);
-    // print('After await getData: $item');
     return item;
   }
 
@@ -31,11 +30,11 @@ class MyLocalStorage {
         try {
           List<dynamic> valuesList = jsonDecode(value);
           for (var wordMap in valuesList) {
-            wordMap['key'] = key; // Add the key as an identifier
+            wordMap['key'] = key;
             savedWord.add(wordMap);
           }
         } catch (e) {
-          print('Error decoding value to Map: $e');
+          throw Exception(e);
         }
       }
     }

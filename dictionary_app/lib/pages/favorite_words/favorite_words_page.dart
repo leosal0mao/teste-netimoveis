@@ -24,7 +24,7 @@ class _FavoriteWordsPageState extends State<FavoriteWordsPage> {
 
   @override
   void dispose() {
-    favoritewordsBloc.close(); //dispose unused bloc to prevent memory leaks
+    favoritewordsBloc.close();
     super.dispose();
   }
 

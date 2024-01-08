@@ -30,7 +30,6 @@ class WordsRepository {
         return wordValidData;
       }
     } catch (e) {
-      print(e);
       throw Exception('Error in method getWord $e');
     }
   }

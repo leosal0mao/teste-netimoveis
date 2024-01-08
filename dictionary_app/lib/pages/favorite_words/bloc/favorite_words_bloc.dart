@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:dictionary_app/entities/word.dart';
-import 'package:dictionary_app/providers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../repositories/favorite_words_repository.dart';
 

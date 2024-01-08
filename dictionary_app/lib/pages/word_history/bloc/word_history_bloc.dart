@@ -23,7 +23,6 @@ class WordHistoryBloc extends Bloc<WordHistoryEvent, WordHistoryState> {
       var words = await wordsRepository.getAllItemsFromLocalStorage();
       emit(WordHistorySuccess(words: words));
     } catch (e) {
-      print(e);
       emit(WordHistoryFailure(message: e.toString()));
     }
   }

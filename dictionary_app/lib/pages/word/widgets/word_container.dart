@@ -34,11 +34,11 @@ class WordContainer extends StatelessWidget {
           children: [
             Text(
               word ?? 'Word not available',
-              style: TextStyle(fontSize: 30),
+              style: const TextStyle(fontSize: 30),
             ),
             const SizedBox(height: 20),
             Text(phonetic ?? 'Phonetic not available',
-                style: TextStyle(fontSize: 20)),
+                style: const TextStyle(fontSize: 20)),
           ],
         )),
       ),

@@ -15,6 +15,5 @@ class FailureWidget extends StatelessWidget {
         ),
       ),
     );
-    ;
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:dictionary_app/pages/favorite_words/bloc/favorite_words_bloc.dart';
 import 'package:dictionary_app/pages/word/widgets/meanings_container.dart';
 import 'package:dictionary_app/pages/word/widgets/play_audio_button.dart';

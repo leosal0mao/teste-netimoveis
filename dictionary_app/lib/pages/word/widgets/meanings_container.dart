@@ -33,16 +33,16 @@ class MeaningsContainer extends StatelessWidget {
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Meaning:', style: TextStyle(fontSize: 35)),
+            const Text('Meaning:', style: TextStyle(fontSize: 35)),
             const SizedBox(height: 10),
             Text(
               'Meaning: ${meaning ?? 'Not available'} ',
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 20),
             Text(
               'Definition: ${definition ?? 'Not available'}',
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
           ],
         )),
